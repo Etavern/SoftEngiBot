@@ -2,32 +2,33 @@ import socket
 import platform
 from uuid import getnode as get_mac
 
+
 class Bot:
 
     id = 0
     ip = socket.gethostbyname(socket.gethostname())
     mac = hex(get_mac())
     os = platform.platform()
-    
-    
-    def handleFile(test):
+
+    def handleFile(self, ip):
         print("test")
 
-    def executeCMD(test):
+    def executeCMD(self, test):
         print("test")
 
-    def pushFile(test):
+    def pushFile(self, test):
         print("test")
 
-    def screenshot():
+    def screenshot(self):
         print("screenshot")
 
-    def scan():
+    def scan(self):
         print("scan")
 
-    def sleep():
+    def sleep(self):
         print("sleep")
-        
+
+
 bot1 = Bot()
 
 print("IP: ", bot1.ip)
