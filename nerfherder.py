@@ -30,14 +30,13 @@ def add_bot():
     bots = bot_list.getElementsByTagName('bot')
 
     new_bot = bot_list.createElement('bot')
-    new_bot.setAttribute('id', len(bots))
-    new_bot.setAttribute('ip', '192.168.0.%d' % len(bots))
-    new_bot.setAttribute('mac', 0xffeeddccbbaa)
-    new_bot.setAttribute('os', ("WinShit", len(bots)))
+    #new_bot.setAttribute('id', len(bots))
+    #new_bot.setAttribute('ip', '192.168.0.%d' % len(bots))
+    #new_bot.setAttribute('mac', 0xffeeddccbbaa)
+    #new_bot.setAttribute('os', ("WinShit", len(bots)))
 
-    bot_text = bot_list.createTextNode('bot')
-    new_bot.appendChild(bot_text)
     bot_list.childNodes[0].appendChild(new_bot)
+    print(bot_list.toxml())
 
 
 def end():
