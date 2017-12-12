@@ -1,4 +1,6 @@
+<?xml version="1.0" ?>
 <root>
     <bot id="0" ip="127.0.0.1" mac="0x100ba9235330" os="Linux-4.13.12-1-ARCH-x86_64-with-arch"/>
+    <bot id="1" ip="192.168.0.1" mac="0x01b09a323503" os="Probably shitty windows"/>
 
 </root>
