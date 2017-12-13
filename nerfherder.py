@@ -1,4 +1,3 @@
-import bot as nerf
 from xml.dom import minidom
 
 
