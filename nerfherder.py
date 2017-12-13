@@ -116,6 +116,28 @@ server.listen(5)
 print("[*--> Listening on %s:%d\n" % (bind_ip, bind_port))
 
 
+def handle_client(client_socket):
+    request = client_socket.recv(1024)
+
+    print("[*--> Received: %s" % request)
+
+    client_socket.send("GOT IT")  # SEND A TEST PACKET BACK
+    client_socket.close()
+
+
+def the_server():
+    while True:
+        client, addr = server.accept()
+        print('[*--> Accepted connection from %s:%d' % (addr[0], addr[1]))
+
+        # Client thread handling for incoming data
+        client_handler = threading.Thread(target=handle_client, args=(client,))
+        client_handler.start()
+
+
+server_handler = threading.Thread(target=the_server, args=())
+server_handler.start()
+
 # ---------- ITEM SELECTION TREE ---------- #
 while True:
     select = int(menu())
