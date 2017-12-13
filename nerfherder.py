@@ -26,17 +26,19 @@ def view_bots():
 def add_bot():
     # Add a bot to the database
 
-    bot_list = gen_bot_list()
+    bot_list = minidom.parse('bots.xml')
     bots = bot_list.getElementsByTagName('bot')
 
     new_bot = bot_list.createElement('bot')
-    #new_bot.setAttribute('id', len(bots))
-    #new_bot.setAttribute('ip', '192.168.0.%d' % len(bots))
-    #new_bot.setAttribute('mac', 0xffeeddccbbaa)
-    #new_bot.setAttribute('os', ("WinShit", len(bots)))
+    new_bot.setAttribute('id', str(len(bots)))
+    new_bot.setAttribute('ip', '192.168.0.%d' % len(bots))
+    new_bot.setAttribute('mac', "0xffeeddccbbaa")
+    new_bot.setAttribute('os', "WinShit%d" % len(bots))
 
-    bot_list.childNodes[0].appendChild(new_bot)
-    print(bot_list.toxml())
+    bot_list.getElementsByTagName('root')[0].appendChild(new_bot)
+    my_file = open('bots.xml', 'w')
+    my_file.write(bot_list.toxml())
+    my_file.close()
 
 
 def end():
