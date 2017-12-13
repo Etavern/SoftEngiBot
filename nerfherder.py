@@ -68,6 +68,50 @@ def menu():
     print('')
     return choice
 
+
+def send_cmd(cmd):
+    target_host = "127.0.0.1"
+    target_port = 6660
+
+    # create a socket object
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # connect the client
+    client.connect((target_host, target_port))
+
+    # send some data
+    client.send(cmd)
+
+
+# ---------- TCP Server ---------- #
+# Code example from Black Hat Python, written by Justin Seitz and published by No Starch Press
+bind_ip = '0.0.0.0'
+bind_port = 9999
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind((bind_ip, bind_port))
+server.listen(5)
+print("[*--> Listening on %s:%d\n" % (bind_ip, bind_port))
+
+
+def handle_client(client_socket):
+    request = client_socket.recv(1024)
+
+    print("[*--> Received: %s" % request)
+
+    client_socket.send("GOT IT")  # SEND A TEST PACKET BACK
+    client_socket.close()
+
+
+def the_server():
+    while True:
+        client, addr = server.accept()
+        print('[*--> Accepted connection from %s:%d' % (addr[0], addr[1]))
+
+        # Client thread handling for incoming data
+        client_handler = threading.Thread(target=handle_client, args=(client,))
+        client_handler.start()
+
+
 # ---------- SCRIPT LOGO ---------- #
 print("     ******************************************************************************************************************************************************************")
 print("     *                                                                                                                                                                *")
@@ -105,36 +149,7 @@ print("     *                                                                   
 print("     *                                                                                                                                                                *")
 print("     ******************************************************************************************************************************************************************")
 
-
-# ---------- TCP Server ---------- #
-# Code example from Black Hat Python, written by Justin Seitz and published by No Starch Press
-bind_ip = '0.0.0.0'
-bind_port = 9999
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((bind_ip, bind_port))
-server.listen(5)
-print("[*--> Listening on %s:%d\n" % (bind_ip, bind_port))
-
-
-def handle_client(client_socket):
-    request = client_socket.recv(1024)
-
-    print("[*--> Received: %s" % request)
-
-    client_socket.send("GOT IT")  # SEND A TEST PACKET BACK
-    client_socket.close()
-
-
-def the_server():
-    while True:
-        client, addr = server.accept()
-        print('[*--> Accepted connection from %s:%d' % (addr[0], addr[1]))
-
-        # Client thread handling for incoming data
-        client_handler = threading.Thread(target=handle_client, args=(client,))
-        client_handler.start()
-
-
+# Starts up the tcp receiver
 server_handler = threading.Thread(target=the_server, args=())
 server_handler.start()
 
@@ -150,6 +165,7 @@ while True:
 
     elif select == 2:
         print('function 2')
+        send_cmd('test')
 
     elif select == 3:
         print('function 3')
