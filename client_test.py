@@ -1,6 +1,8 @@
 import socket
 
 
+# This code snippet sends TCP to an open listener
+
 target_host = "127.0.0.1"
 target_port = 9999
 

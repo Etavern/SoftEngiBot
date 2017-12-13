@@ -1,6 +1,7 @@
 import socket
 import threading
 
+# This code snippet handles TCP connects, async
 
 bind_ip = "0.0.0.0"
 bind_port = 6660

