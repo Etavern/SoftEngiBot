@@ -11,16 +11,16 @@ client.listen(5)
 
 while True:
     c, addr = client.accept()
-    print 'Got connection from', addr
-    print "Receiving..."
+    print (('Got connection from', addr))
+    print ("Receiving...")
     l = c.recv(1024)
 
     while l:
-        print "Receiving..."
+        print ("Receiving...")
         target_file.write(l)
         l = c.recv(1024)
 
     target_file.close()
-    print "Done Receiving"
+    print ("Done Receiving")
     c.send('Thank you for connecting')
     c.close()

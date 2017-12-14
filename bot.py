@@ -43,4 +43,3 @@ bot1 = Bot()
 # print("OS: ", bot1.os)
 # bot1.screen_shot()
 # bot1.execute_cmd("ls")
-
