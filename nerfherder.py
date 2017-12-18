@@ -52,7 +52,7 @@ server_handler.start()
 # ---------- END OF SERVER ---------- #
 
 
-# ---------- CORE MENU FUNCTIONS ---------- #
+# ---------- FUNCTIONS ---------- #
 def view_bots():
     # Function to view the existing bots in database
 
@@ -68,6 +68,72 @@ def view_bots():
         print('[*--> OS: %s' % bot.attributes['os'].value)
         print('-' * 30)
         print('')
+
+
+def add_bot(client):
+    # Add a bot to the database
+
+    client.send('[*-->ok')
+
+    ip = client.recv(1024)
+    mac = client.recv(1024)
+    os = client.recv(1024)
+
+    print('%s, %s, %s' % (ip, mac, os))
+    # Open the file as XML, and get all the bots that exist
+    bot_list = minidom.parse('bots.xml')
+    bots = bot_list.getElementsByTagName('bot')
+
+    # Create a new bot and set it's attributes. Currently static
+    new_bot = bot_list.createElement('bot')
+    new_bot.setAttribute('id', str(len(bots)))
+    new_bot.setAttribute('ip', ip)
+    new_bot.setAttribute('mac', mac)
+    new_bot.setAttribute('os', os)
+
+    bot_list.getElementsByTagName('root')[0].appendChild(new_bot)
+    my_file = open('bots.xml', 'w')
+    my_file.write(bot_list.toxml())
+    my_file.close()
+
+    print('*[--> Bot was added')
+    print('>>> \n')
+
+
+def end():
+    # Terminates the execution
+
+    exit(0)
+
+
+def choice_error():
+    # Print an error message in case the user selects a wrong action.
+
+    print('Choice does not exist')
+
+
+def menu():
+    # Print a menu with all the functionality.
+    # Returns:
+        # The choice of the user.
+
+    # print('=' * 30 + '\n\t\t\tMENU\n' + '=' * 30)
+    descriptions = ['View bots',
+                    'Send File',
+                    'Get File',
+                    'Bot Screen Shot',
+                    'Bot Scan',
+                    'Bot CMD',
+                    'Exit']
+
+    # Prints the number (as num) and function name (as func) from array.
+    # Enumerate puts numbers to each list item (so num works)
+    for num, func in enumerate(descriptions):
+        print('[%d--> %s' % (num, func))
+
+    choice = input('>>> \n')
+    print('')
+    return choice
 
 
 def send_cmd(cmd):
@@ -135,77 +201,9 @@ def get_file(the_file):
 
         print('[*-->file get')
         print('>>> ')
-# ---------- END CORE MENU FUNCTIONS ---------- #
 
 
-# ---------- MISC ---------- #
-def add_bot(client):
-    # Add a bot to the database
-
-    client.send('[*-->ok')
-
-    ip = client.recv(1024)
-    mac = client.recv(1024)
-    os = client.recv(1024)
-
-    print('%s, %s, %s' % (ip, mac, os))
-    # Open the file as XML, and get all the bots that exist
-    bot_list = minidom.parse('bots.xml')
-    bots = bot_list.getElementsByTagName('bot')
-
-    # Create a new bot and set it's attributes. Currently static
-    new_bot = bot_list.createElement('bot')
-    new_bot.setAttribute('id', str(len(bots)))
-    new_bot.setAttribute('ip', ip)
-    new_bot.setAttribute('mac', mac)
-    new_bot.setAttribute('os', os)
-
-    bot_list.getElementsByTagName('root')[0].appendChild(new_bot)
-    my_file = open('bots.xml', 'w')
-    my_file.write(bot_list.toxml())
-    my_file.close()
-
-    print('*[--> Bot was added')
-    print('>>> \n')
-# ---------- END MISC ---------- #
-
-
-# ---------- MENU STUFF ---------- #
-def end():
-    # Terminates the execution
-
-    exit(0)
-
-
-def choice_error():
-    # Print an error message in case the user selects a wrong action.
-
-    print('Choice does not exist')
-
-
-def menu():
-    # Print a menu with all the functionality.
-    # Returns:
-        # The choice of the user.
-
-    # print('=' * 30 + '\n\t\t\tMENU\n' + '=' * 30)
-    descriptions = ['View bots',
-                    'Send File',
-                    'Get File',
-                    'Bot Screen Shot',
-                    'Bot Scan',
-                    'Bot CMD',
-                    'Exit']
-
-    # Prints the number (as num) and function name (as func) from array.
-    # Enumerate puts numbers to each list item (so num works)
-    for num, func in enumerate(descriptions):
-        print('[%d--> %s' % (num, func))
-
-    choice = input('>>> \n')
-    print('')
-    return choice
-# ---------- END MENU STUFF ---------- 3
+# ---------- END FUNCTIONS ---------- #
 
 
 # ---------- SCRIPT LOGO ---------- #
