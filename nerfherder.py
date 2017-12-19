@@ -229,9 +229,9 @@ def take_ss():
         print ("Receiving...")
         recv_file = open('screen.png', 'wb')
         file_stream = client.recv(1024)
-
+	print ("Receiving...")
         while file_stream:
-            print ("Receiving...")
+            
             recv_file.write(file_stream)
             file_stream = client.recv(1024)
 
