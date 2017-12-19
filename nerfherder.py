@@ -2,6 +2,7 @@ import socket
 import threading
 import subprocess
 import sys
+import os
 from xml.dom import minidom
 
 bind_host = '0.0.0.0'
@@ -111,7 +112,6 @@ def choice_error():
     # Print an error message in case the user selects a wrong action.
 
     print('Choice does not exist')
-
 
 def menu():
     # Print a menu with all the functionality.
@@ -311,7 +311,7 @@ while True:
         send_cmd(cmd_to_run)
 
     elif select == 6:  # Exit the Script
-        exit()
+        os._exit(1)
 
     else:
         choice_error()
