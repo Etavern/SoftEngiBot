@@ -73,9 +73,14 @@ def view_bots():
 
 
 def set_bot(bot_id):
+    # Sets which bot to send to
+
+    # Open the XML, get the elements, assign the desired bot
     bot_list = minidom.parse('bots.xml')
     bots = bot_list.getElementsByTagName('bot')
     bot = bots[int(bot_id)]
+
+    # Return/set he IP address of the bot
     return bot.attributes['ip'].value
 
 
