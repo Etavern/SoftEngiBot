@@ -102,6 +102,9 @@ def do_scan(addr):
     # Parse input
     ip, mask = addr.split("/")
 
+    # Variable to store active IP's to be transmitted
+    actives = ""
+
     # Error checking for valid mask & network ID
     if not (1 <= int(mask) <= 32):
         print "Error - incorrect input: invalid subnet mask"
@@ -153,6 +156,8 @@ def do_scan(addr):
             print(str(all_hosts[i]), "is Offline")
         else:
             print(str(all_hosts[i]), "is Online")
+            actives = actives + str(all_hosts[i]) + "\n"
+            client.send(actives)
             
 # ---------- END SCANNER STUFF ---------- #
 

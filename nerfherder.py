@@ -251,6 +251,8 @@ def do_scan(ip_to_scan):
     if client.recv(1024) == '[*-->ok':
         client.send(ip_to_scan)
 
+    print(client.recv(1024))
+
 
 def take_ss():
     # create a socket object
